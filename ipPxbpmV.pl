@@ -1,3 +1,7 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sudoku 9x9 que valida linhas, colunas e sub-matrizes 3x3 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 sudoku(Sudoku, Solution) :-
     resolver(Sudoku, Solution). 
 
@@ -12,7 +16,7 @@ resolver(Sudoku, Solution) :-
 
 
 %Verificar se a matriz é válida
-validar_matriz(Sudoku) :- %verifica se é 9x9
+validar_matriz(Sudoku) :- 
     linhas(Sudoku),
     colunas(Sudoku).
 
@@ -58,25 +62,26 @@ preencher([H|T], [H2|T2]) :-
     substituir_zeros(H, Usados, H2),
     preencher(T, T2).
   
+
 guardar_linha([], []).
-guardar_linha([H|T], [H|Usados]) :-
+guardar_linha([H|T], [H|Usados]) :-  % guarda os numeros diferentes de 0 que estão na linha
     H \= 0,
     guardar_linha(T, Usados).
 guardar_linha([0|T], Usados) :-
     guardar_linha(T, Usados).
 
-substituir_zeros([], _,[]).
+substituir_zeros([], _,[]). %1ºparametro:linha original, 2º numeros guardados, 3º linha com os zeros substituidos
 substituir_zeros([H|T], Usados, [H|T2]):- %se não é 0 então nao faz nada e continua
     H \= 0,
     substituir_zeros(T, [H|Usados], T2).
-substituir_zeros([0|T], Usados, [N|T2]):-  % se estiver 0
-  	member(N, [1, 2, 3, 4, 5, 6, 7, 8, 9]),  % Choose a number from 1 to 9
+substituir_zeros([0|T], Usados, [N|T2]):-  
+  	member(N, [1, 2, 3, 4, 5, 6, 7, 8, 9]),  % escolhe um numero de 1 a 9
     nao_existe_na_linha(N, Usados),  
     substituir_zeros(T, [N|Usados], T2).
 
 nao_existe_na_linha(_, []).
 nao_existe_na_linha(N, [H|T]) :-
-    N \= H,
+    N \= H, %para e dá false se o numero estiver na lista de usados
     nao_existe_na_linha(N, T).
 
 %Verificações
@@ -93,9 +98,30 @@ nao_tem_repetidos([H | T]) :-
     \+ member(H,T), %verifica se H não está no restante da lista 
     nao_tem_repetidos(T).
 
-%Validar se os numeros estão todos entre 1 e 9
-validar_numeros([]).
-validar_numeros([H|T]):-
-    H>=1,
-    H=<9,
-    validar_numeros(T).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sudoku nxn que valida linhas e colunas                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+sudoku_geral(Sudoku, Solution) :-
+    resolve_sudoku(Sudoku, Solution).
+             
+resolve_sudoku(Sudoku, Solution) :- 
+    matriz_quadrada(Sudoku), %valida se a matriz é nxn 
+    preencher(Sudoku, Preenchido),  
+    Solution = Preenchido, 
+    transpor(Preenchido, Colunas), 
+    validar_linhas(Colunas).
+
+matriz_quadrada([]).
+matriz_quadrada([Linha|T]) :-
+    length([Linha|T], N), % N é o numero de linhas
+    todas_linhas_tamanho([Linha|T], N). % Confirma que todas as linhas têm tamanho N.
+
+% valida que todas as linhas têm N colunas
+todas_linhas_tamanho([], _).
+todas_linhas_tamanho([Linha|T], N) :-
+    length(Linha, N),
+    todas_linhas_tamanho(T, N). 
+             
+             
