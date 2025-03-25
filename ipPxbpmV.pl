@@ -92,7 +92,7 @@ validar_linhas([H|T]):- %valida linha a linha H=linha e T=linhas restantes
         nao_tem_repetidos(H),
         validar_linhas(T).
         
-%Validar se ao adicionar numero, este nao se repete na linha
+%Validar se ao adicionar numero, este não se repete na linha
 nao_tem_repetidos([]).  
 nao_tem_repetidos([H | T]) :-  
     \+ member(H,T), %verifica se H não está no restante da lista 
@@ -100,7 +100,7 @@ nao_tem_repetidos([H | T]) :-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Sudoku nxn que valida linhas e colunas                   %
+%           Sudoku nxn que valida linhas e colunas         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 sudoku_geral(Sudoku, Solution) :-
@@ -113,15 +113,36 @@ resolve_sudoku(Sudoku, Solution) :-
     transpor(Preenchido, Colunas), 
     validar_linhas(Colunas).
 
+%Validar se a matriz é quadrada
 matriz_quadrada([]).
 matriz_quadrada([Linha|T]) :-
     length([Linha|T], N), % N é o numero de linhas
     todas_linhas_tamanho([Linha|T], N). % Confirma que todas as linhas têm tamanho N.
 
-% valida que todas as linhas têm N colunas
-todas_linhas_tamanho([], _).
+todas_linhas_tamanho([], _).% valida que todas as linhas têm N colunas
 todas_linhas_tamanho([Linha|T], N) :-
     length(Linha, N),
     todas_linhas_tamanho(T, N). 
+     
+%Numeros validos
+numeros_validos(N, Lista) :- 
+    gerar_numeros(1, N, Lista).
+
+gerar_numeros(N, N, [N]). 
+gerar_numeros(I, N, [I|T]) :- 
+    I < N,
+    I1 is I + 1,
+    gerar_numeros(I1, N, T).
+
+%Preencher zeros
+
+
+
+
+
+             
+             
+             
+             
              
              
