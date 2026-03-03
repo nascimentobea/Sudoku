@@ -13,3 +13,10 @@
 - Handles incomplete boards (zeros are treated as empty cells).
 
 - Works for both classic Sudoku and generalized NxN Sudoku.
+
+## Authors:
+
+- Beatriz Nascimento nº 123302
+- Inês Portugal nº 123293
+
+This repository is a fork of the group's original repository.
